@@ -291,11 +291,24 @@ export default function InchargeDashboard() {
                     <span>दस्तावेज़ की सुरक्षा: Signed URL (सीमित समय वैधता) सक्षम है।</span>
                   </div>
                   <a
-                    href="#"
-                    onClick={(e) => { e.preventDefault(); alert("दस्तावेज़ डाउनलोड सिमुलेशन: scanned-doc-preview.pdf"); }}
+                    href={selectedDak.file_url || '#'}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={(e) => {
+                      if (selectedDak.file_url && selectedDak.file_url.startsWith('data:')) {
+                        e.preventDefault();
+                        const win = window.open();
+                        if (win) {
+                          win.document.write(`<iframe src="${selectedDak.file_url}" frameborder="0" style="border:0; top:0px; left:0px; bottom:0px; right:0px; width:100%; height:100%;" allowfullscreen></iframe>`);
+                        }
+                      } else if (selectedDak.file_url === '#') {
+                        e.preventDefault();
+                        alert("दस्तावेज़ डाउनलोड सिमुलेशन: scanned-doc-preview.pdf");
+                      }
+                    }}
                     className="flex items-center space-x-1 text-blue-700 hover:text-blue-600 border border-blue-300 bg-white px-3 py-1.5 rounded-lg shadow-sm transition"
                   >
-                    <span>फाइल देखें (PDF)</span>
+                    <span>फाइल देखें (PDF/Image)</span>
                     <ExternalLink className="h-3 w-3" />
                   </a>
                 </div>

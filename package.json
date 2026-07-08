@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://gauravsomvanshi.github.io/DMS",
+  "homepage": "https://kushwahashailesh26-coder.github.io/DMS-1",
   "scripts": {
     "dev": "vite",
     "predeploy": "npm run build",

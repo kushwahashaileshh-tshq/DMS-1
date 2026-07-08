@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { uploadDak, getAllDaks, getProfilesByRole, getDashboardStats } from '../services/dak';
 import { DashboardLayout } from '../layouts/DashboardLayout';
@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 
 export default function AdminDashboard() {
   const { profile } = useAuth();
+  const fileInputRef = useRef(null);
   
   // Form State
   const [senderName, setSenderName] = useState('');
@@ -15,6 +16,21 @@ export default function AdminDashboard() {
   const [description, setDescription] = useState('');
   const [selectedIncharge, setSelectedIncharge] = useState('');
   const [fileAttached, setFileAttached] = useState(false);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [filePreview, setFilePreview] = useState(null);
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setSelectedFile(file);
+      setFileAttached(true);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFilePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
   
   // Data States
   const [incharges, setIncharges] = useState([]);
@@ -55,7 +71,7 @@ export default function AdminDashboard() {
       sender_department: senderDept,
       subject: subject,
       description: description,
-      file_url: fileAttached ? '/scanned-dak-doc.pdf' : '#', // Mock PDF location
+      file_url: fileAttached ? (filePreview || '/scanned-dak-doc.pdf') : '#',
       to_user_id: selectedIncharge
     });
 
@@ -71,6 +87,9 @@ export default function AdminDashboard() {
       setSubject('');
       setDescription('');
       setFileAttached(false);
+      setSelectedFile(null);
+      setFilePreview(null);
+      if (fileInputRef.current) fileInputRef.current.value = '';
       loadData();
     }
   };
@@ -195,18 +214,25 @@ export default function AdminDashboard() {
               </div>
 
               <div>
-                <label className="block text-[11px] font-bold text-slate-500 uppercase mb-1">दस्तावेज़ स्कैनिंग (PDF Upload Simulation)</label>
+                <label className="block text-[11px] font-bold text-slate-500 uppercase mb-1">दस्तावेज़ स्कैनिंग और अपलोड (PDF / Image)</label>
                 <div className="flex items-center space-x-3 mt-1">
+                  <input
+                    type="file"
+                    ref={fileInputRef}
+                    accept="image/*,application/pdf"
+                    className="hidden"
+                    onChange={handleFileChange}
+                  />
                   <button
                     type="button"
-                    onClick={() => setFileAttached(!fileAttached)}
+                    onClick={() => fileInputRef.current && fileInputRef.current.click()}
                     className={`w-full py-1.5 border rounded-lg text-[11px] font-semibold transition ${
                       fileAttached 
                         ? 'bg-green-600 text-white border-green-600' 
                         : 'bg-slate-100 text-slate-700 hover:bg-slate-200 border-slate-300'
                     }`}
                   >
-                    {fileAttached ? '✓ फ़ाइल स्कैन हो गई (scanned-doc.pdf)' : 'फाइल स्कैन और संलग्न करें'}
+                    {fileAttached ? `✓ फ़ाइल संलग्न: ${selectedFile ? selectedFile.name : 'scanned-doc.pdf'}` : 'फ़ाइल (PDF/Image) चुनें और संलग्न करें'}
                   </button>
                 </div>
               </div>
