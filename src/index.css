@@ -1,0 +1,29 @@
+@import "tailwindcss";
+
+@theme {
+  --color-police-dark: #0B1E36;
+  --color-police-blue: #1E3A8A;
+  --color-police-gold: #D97706;
+  --color-police-light: #F3F4F6;
+  --color-police-accent: #EF4444;
+}
+
+@layer base {
+  body {
+    @apply bg-slate-50 text-slate-900 min-h-screen antialiased;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+}
+
+/* Custom styles for Police theme portal */
+.police-gradient {
+  background: linear-gradient(135deg, #0B1E36 0%, #1E3A8A 100%);
+}
+
+.police-card-shadow {
+  box-shadow: 0 4px 6px -1px rgba(11, 30, 54, 0.05), 0 2px 4px -1px rgba(11, 30, 54, 0.03);
+}
+
+.police-glow {
+  box-shadow: 0 0 15px rgba(30, 58, 138, 0.15);
+}
