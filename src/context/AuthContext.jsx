@@ -28,7 +28,26 @@ export const AuthProvider = ({ children }) => {
     setError(null);
     const { data, error: err } = await authLogin(email, password);
     if (err) {
-      setError(err.message);
+      let errorMessage = 'An unknown error occurred during login.';
+      if (err.message) {
+        errorMessage = err.message;
+      } else if (typeof err === 'string') {
+        errorMessage = err;
+      } else {
+        try {
+          errorMessage = JSON.stringify(err);
+          if (errorMessage === '{}') errorMessage = err.toString();
+        } catch (e) {
+          errorMessage = err.toString();
+        }
+      }
+      
+      // Provide a clearer message if the profile doesn't exist yet
+      if (errorMessage.includes('JSON object requested')) {
+        errorMessage = 'Your account exists but your user profile is missing. Please contact support or run the database migration correctly.';
+      }
+
+      setError(errorMessage);
       return false;
     }
     setUser(data.user);

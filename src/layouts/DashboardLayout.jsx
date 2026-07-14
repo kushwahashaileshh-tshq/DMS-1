@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { LogOut, FileText, Search, User, Shield, Navigation } from 'lucide-react';
+import { LogOut, FileText, Search, User, Shield } from 'lucide-react';
 
 export const DashboardLayout = ({ children }) => {
   const { profile, logout } = useAuth();

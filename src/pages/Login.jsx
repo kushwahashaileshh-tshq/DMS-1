@@ -17,11 +17,8 @@ export default function Login() {
     setLoading(false);
     
     if (success) {
-      // Check role and redirect
-      if (email.includes('admin')) navigate('/admin');
-      else if (email.includes('incharge')) navigate('/incharge');
-      else if (email.includes('employee')) navigate('/employee');
-      else navigate('/track');
+      // Navigate to root and let RootRedirect handle role-based routing
+      navigate('/');
     }
   };
 
@@ -32,9 +29,7 @@ export default function Login() {
     const success = await login(mockEmail, 'password');
     setLoading(false);
     if (success) {
-      if (mockEmail.includes('admin')) navigate('/admin');
-      else if (mockEmail.includes('incharge')) navigate('/incharge');
-      else navigate('/employee');
+      navigate('/');
     }
   };
 
